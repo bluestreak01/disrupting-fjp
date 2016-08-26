@@ -31,7 +31,7 @@ public class ForkJoin extends Workload {
         }
     }
 
-    @Benchmark
+//    @Benchmark
     public double run() throws InterruptedException {
         final List<PiForkJoinTask> tasks = new ArrayList<PiForkJoinTask>();
         final int ts = getThreads();

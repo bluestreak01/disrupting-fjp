@@ -39,7 +39,7 @@ public class ForkJoinRecursive extends Workload {
         }
     }
 
-    @Benchmark
+//    @Benchmark
     public double run() throws InterruptedException {
         return new PiForkJoinTask(0, getSlices()).invoke();
     }

@@ -20,7 +20,7 @@ public class ForkJoinReuse extends Workload {
         }
     }
 
-    @Benchmark
+//    @Benchmark
     public double run() throws InterruptedException {
         final int stride = getThreads() * 100;
         final PiForkJoinTask[] tasks = new PiForkJoinTask[stride];

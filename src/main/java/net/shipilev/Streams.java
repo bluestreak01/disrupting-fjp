@@ -6,7 +6,7 @@ import java.util.stream.IntStream;
 
 public class Streams extends Workload {
 
-    @Benchmark
+//    @Benchmark
     public double run() {
         return IntStream.range(0, getSlices())
                     .parallel()

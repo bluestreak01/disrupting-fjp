@@ -23,7 +23,7 @@ public class QuestdbFanOut extends Workload {
     public static void main(String[] args) throws BrokenBarrierException, InterruptedException {
         QuestdbFanOut qdb = new QuestdbFanOut();
         QuestdbFanOut.slicesK = 100000;
-        QuestdbFanOut.threads = 1;
+        QuestdbFanOut.threads = 2;
         qdb.setup();
         long t = System.currentTimeMillis();
         qdb.run();
@@ -116,7 +116,6 @@ public class QuestdbFanOut extends Workload {
                 }
 
                 long available = sequence.available();
-//                batches.add((int) (available - cursor));
                 while (cursor < available) {
                     PiJob event = queue.get(cursor++);
                     if (index == event.partitionId) {
@@ -124,6 +123,8 @@ public class QuestdbFanOut extends Workload {
                     }
                 }
                 sequence.done(available - 1);
+                long count = 800000;
+                while (count-- > 0) ;
             }
         }
 
@@ -175,6 +176,7 @@ public class QuestdbFanOut extends Workload {
 
                 if (seq >= numSlice) {
                     latch.countDown();
+                    break;
                 }
             }
         }

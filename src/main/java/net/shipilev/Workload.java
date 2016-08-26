@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class Workload {
 
-    @Param({"500", "1000", "5000", "10000", "50000"})
+    @Param({"500", "1000", "5000"})
     public static int slicesK;
 
     @Param({"10"})

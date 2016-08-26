@@ -4,7 +4,7 @@ import org.openjdk.jmh.annotations.Benchmark;
 
 public class SingleThread extends Workload {
 
-    @Benchmark
+//    @Benchmark
     public double run() {
         double acc = 0;
         for (int s = 0; s < getSlices(); s++) {
