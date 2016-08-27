@@ -47,7 +47,7 @@ public class QuestdbWorker extends Workload {
         this.pubSeq = new SPSequence(queue.getCapacity());
         SCSequence resultSequence = new SCSequence();
         MCSequence processorSequence = new MCSequence(queue.getCapacity(), null);
-        pubSeq.followedBy(processorSequence).followedBy(resultSequence).followedBy(pubSeq);
+        pubSeq.then(processorSequence).then(resultSequence).then(pubSeq);
 
         executor = Executors.newCachedThreadPool();
 

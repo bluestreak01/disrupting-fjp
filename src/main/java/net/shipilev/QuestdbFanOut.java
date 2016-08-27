@@ -58,7 +58,7 @@ public class QuestdbFanOut extends Workload {
         FanOut fanOut = new FanOut();
         pubSeq = new SPSequence(queue.getCapacity());
         SCSequence reclaimerSequence = new SCSequence();
-        pubSeq.followedBy(fanOut).followedBy(reclaimerSequence).followedBy(pubSeq);
+        pubSeq.then(fanOut).then(reclaimerSequence).then(pubSeq);
 
         executor = Executors.newCachedThreadPool();
         procs = new PiEventProcessor[getThreads()];
@@ -77,30 +77,30 @@ public class QuestdbFanOut extends Workload {
         executor.shutdownNow();
     }
 
-    public static class PiJob {
+    static class PiJob {
         public double result;
-        public int sliceNr;
-        public int partitionId;
+        int sliceNr;
+        int partitionId;
 
-        public void calculatePi() {
+        void calculatePi() {
             result = doCalculatePi(sliceNr);
         }
     }
 
-    public static class PiEventFac implements com.questdb.std.ObjectFactory<PiJob> {
+    private static class PiEventFac implements com.questdb.std.ObjectFactory<PiJob> {
         @Override
         public PiJob newInstance() {
             return new PiJob();
         }
     }
 
-    public static class PiEventProcessor implements Runnable {
+    private static class PiEventProcessor implements Runnable {
         private final RingQueue<PiJob> queue;
         private final Sequence sequence;
         private final int index;
         private volatile boolean running = true;
 
-        public PiEventProcessor(int index, RingQueue<PiJob> queue, Sequence sequence) {
+        PiEventProcessor(int index, RingQueue<PiJob> queue, Sequence sequence) {
             this.index = index;
             this.queue = queue;
             this.sequence = sequence;
@@ -133,7 +133,7 @@ public class QuestdbFanOut extends Workload {
         }
     }
 
-    public static class PiResultReclaimer implements Runnable {
+    private static class PiResultReclaimer implements Runnable {
         private final int numSlice;
         private final CountDownLatch latch;
         private final RingQueue<PiJob> queue;
@@ -142,14 +142,14 @@ public class QuestdbFanOut extends Workload {
         private long seq;
         private volatile boolean running = true;
 
-        public PiResultReclaimer(final int numSlice, RingQueue<PiJob> queue, SCSequence sequence) {
+        PiResultReclaimer(final int numSlice, RingQueue<PiJob> queue, SCSequence sequence) {
             this.numSlice = numSlice;
             latch = new CountDownLatch(1);
             this.queue = queue;
             this.sequence = sequence;
         }
 
-        public double get() throws InterruptedException {
+        double get() throws InterruptedException {
             latch.await();
             return result;
         }
